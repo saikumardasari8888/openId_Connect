@@ -8,5 +8,5 @@ RUN ./gradlew bootJar -x test --no-daemon
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar Gradle_Docker.jar
-EXPOSE 9090sss
+EXPOSE 9090
 ENTRYPOINT ["java", "-jar", "OpenId_Connect.jar"]
