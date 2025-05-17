@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User Registration</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h2>User Registration</h2>
+
+<form th:action="@{/auth/register}" method="post" th:object="${user}">
+  <div>
+    <label>Username:</label>
+    <input type="text" th:field="*{username}" required />
+  </div>
+
+  <div>
+    <label>Password:</label>
+    <input type="password" th:field="*{password}" required />
+  </div>
+
+  <div>
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" required />
+  </div>
+
+  <div>
+    <label>Full Name:</label>
+    <input type="text" th:field="*{fullName}" required />
+  </div>
+
+  <div>
+    <label>Phone Number:</label>
+    <input type="text" th:field="*{phoneNumber}" />
+  </div>
+
+  <div>
+    <label>Roles:</label>
+    <select th:field="*{roles}" multiple size="3">
+      <option value="USER">USER</option>
+      <option value="ADMIN">ADMIN</option>
+      <option value="MANAGER">MANAGER</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Attributes (key-value):</label>
+    <div th:each="entry, stat : *{attributes}">
+      <input type="text" th:name="'attributes[' + ${stat.index} + '].key'" th:value="${entry.key}" placeholder="Key" />
+      <input type="text" th:name="'attributes[' + ${stat.index} + '].value'" th:value="${entry.value}" placeholder="Value" />
+    </div>
+
+    <!-- Add a few empty key-value inputs to allow new entries -->
+    <div>
+      <input type="text" th:name="'attributes[' + ${#lists.size(user.attributes)} + '].key'" placeholder="Key" />
+      <input type="text" th:name="'attributes[' + ${#lists.size(user.attributes)} + '].value'" placeholder="Value" />
+    </div>
+  </div>
+
+  <div>
+    <button type="submit">Register</button>
+  </div>
+</form>
+
+<p>Already have an account? <a th:href="@{/auth/login}">Login here</a>.</p>
+</body>
+</html>

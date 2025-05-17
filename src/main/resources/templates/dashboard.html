@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Dashboard</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div class="container">
+  <h2>Welcome to the Dashboard</h2>
+  <p>Hello, <span th:text="${username}">User</span>!</p>
+
+  <div class="panel">
+    <h3>OpenID Connect Provider Status</h3>
+    <p>Your OpenID Connect provider is active and ready to accept authentication requests.</p>
+
+    <h4>OIDC Endpoints:</h4>
+    <ul>
+      <li>Authorization Endpoint: <code>http://localhost:9090/oauth2/authorize</code></li>
+      <li>Token Endpoint: <code>http://localhost:9090/oauth2/token</code></li>
+      <li>UserInfo Endpoint: <code>http://localhost:9090/userinfo</code></li>
+      <li>JWKS URI: <code>http://localhost:9090/.well-known/jwks.json</code></li>
+      <li>OpenID Configuration: <code>http://localhost:9090/.well-known/openid-configuration</code></li>
+    </ul>
+  </div>
+
+  <div class="actions">
+    <form th:action="@{/auth/logout}" method="post">
+      <button type="submit">Logout</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
