@@ -81,7 +81,7 @@ public class OidcConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer("http://localhost:9090")  // Update this in production
+                .issuer("https://openid-connect.onrender.com")  // Update this in production
                 .build();
     }
 }

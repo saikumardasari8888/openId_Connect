@@ -1,18 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>JWKS</title>
-  <meta charset="UTF-8" />
-  <script th:inline="javascript">
-    /*<![CDATA[*/
-    document.addEventListener('DOMContentLoaded', function() {
-        const jwksJson = /*[[${jwksJson}]]*/ {};
-        document.querySelector('pre').textContent = JSON.stringify(jwksJson, null, 2);
-    });
-    /*]]>*/
-  </script>
+  <meta charset="UTF-8">
+  <title>JSON Web Key Set</title>
 </head>
 <body>
-<pre></pre>
+<script th:inline="javascript">
+  document.write(JSON.stringify([[${jwkSet}]], null, 2));
+</script>
 </body>
 </html>

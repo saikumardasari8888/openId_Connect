@@ -23,11 +23,11 @@ public class OidcDiscoveryController {
     public ModelAndView discovery() {
         ModelAndView mav = new ModelAndView("oidc-discovery");
         // OIDC Discovery document properties
-        mav.addObject("issuer", "http://localhost:9090");
-        mav.addObject("authorization_endpoint", "http://localhost:9090/oauth2/authorize");
-        mav.addObject("token_endpoint", "http://localhost:9090/oauth2/token");
-        mav.addObject("userinfo_endpoint", "http://localhost:9090/userinfo");
-        mav.addObject("jwks_uri", "http://localhost:9090/.well-known/jwks.json");
+        mav.addObject("issuer", "https://openid-connect.onrender.com");
+        mav.addObject("authorization_endpoint", "https://openid-connect.onrender.com/oauth2/authorize");
+        mav.addObject("token_endpoint", "https://openid-connect.onrender.com/oauth2/token");
+        mav.addObject("userinfo_endpoint", "https://openid-connect.onrender.com/userinfo");
+        mav.addObject("jwks_uri", "https://openid-connect.onrender.com/.well-known/jwks.json");
 
         // Add supported scopes
         mav.addObject("scopes_supported", new String[]{"openid", "profile", "email"});
