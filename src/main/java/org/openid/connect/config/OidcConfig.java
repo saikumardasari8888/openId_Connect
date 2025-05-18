@@ -36,7 +36,7 @@ public class OidcConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("https://28b4be18trial.it-cpitrial03.cfapps.ap21.hana.ondemand.com/callback")
+                .redirectUri("https://auowyx4ay.trial-accounts.ondemand.com/oauth2/callback")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope(OidcScopes.EMAIL)
