@@ -1,6 +1,10 @@
 package org.openid.connect.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.openid.connect.model.User;
+import org.openid.connect.repo.ZangoRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Controller;
@@ -14,7 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -24,6 +30,8 @@ public class OAuth2Controller {
 
     private final OAuth2AuthorizationService authorizationService;
     private final RegisteredClientRepository clientRepository;
+    private final ZangoRepository userRepository;
+    private final TokenController tokenController;
 
     @GetMapping("/authorize")
     public String authorize(
@@ -38,14 +46,48 @@ public class OAuth2Controller {
         // Add the client_id to the model so we can display it on the consent page
         model.addAttribute("clientId", parameters.get("client_id"));
         model.addAttribute("scopes", parameters.getOrDefault("scope", "").split(" "));
+        model.addAttribute("redirectUri", parameters.get("redirect_uri"));
+        model.addAttribute("state", parameters.getOrDefault("state", ""));
 
         // Check if user is already authenticated
-        if (request.getUserPrincipal() == null) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                "anonymousUser".equals(authentication.getName())) {
             // User not authenticated, redirect to login
             return "redirect:/auth/login?redirect=" + request.getRequestURL().toString() + "?" + request.getQueryString();
         } else {
-            // User is authenticated, show consent page
-            return "consent";
+            // User is authenticated, show consent page or auto-approve
+            // For SAP integration, we might want to auto-approve
+            // return "consent";
+
+            // Auto-approve for SAP integration
+            String clientId = parameters.get("client_id");
+            String redirectUri = parameters.get("redirect_uri");
+            String state = parameters.getOrDefault("state", "");
+
+            // Generate authorization code
+            String authCode = generateAuthorizationCode(clientId, authentication.getName(), redirectUri);
+
+            // Store the authorization code info in TokenController
+            tokenController.storeAuthCode(authCode, clientId, redirectUri, authentication.getName());
+
+            // Build the redirect URL with the authorization code
+            String redirectUrl = redirectUri +
+                    "?code=" + authCode +
+                    (state.isEmpty() ? "" : "&state=" + state);
+
+            // Redirect to the client's redirect URI
+            try {
+                HttpServletResponse response = ((HttpServletResponse) request.getAttribute("response"));
+                if (response != null) {
+                    response.sendRedirect(redirectUrl);
+                    return null;
+                } else {
+                    return "redirect:" + redirectUrl;
+                }
+            } catch (IOException e) {
+                return "error";
+            }
         }
     }
 
@@ -63,8 +105,14 @@ public class OAuth2Controller {
             String redirectUri = authParams.get("redirect_uri");
             String state = authParams.getOrDefault("state", "");
 
-            // In a real application, you would generate an authorization code here
-            String authCode = generateAuthorizationCode(authParams.get("client_id"), request.getUserPrincipal().getName());
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+            // Generate an authorization code
+            String authCode = generateAuthorizationCode(authParams.get("client_id"), username, redirectUri);
+
+            // Store the authorization code info in TokenController
+            tokenController.storeAuthCode(authCode, authParams.get("client_id"), redirectUri, username);
 
             // Build the redirect URL with the authorization code
             String redirectUrl = redirectUri +
@@ -82,17 +130,12 @@ public class OAuth2Controller {
         }
     }
 
-    private String generateAuthorizationCode(String clientId, String username) {
-        // This is a simplified example - in a real application, you would:
-        // 1. Generate a secure random code
-        // 2. Store it with associated client_id, redirect_uri, scopes, and username
-        // 3. Set a short expiration time
-
-        // For demo purposes, using a UUID-based code
+    private String generateAuthorizationCode(String clientId, String username, String redirectUri) {
+        // Generate a secure random code
         String code = UUID.randomUUID().toString();
 
-        // In a real implementation, you would store this code in your authorization service
-        // authorizationService.save(code, clientId, username, ...);
+        // Now the authorization code is stored by the TokenController
+        // No need to store it here again
 
         return code;
     }
