@@ -31,12 +31,12 @@ public class OidcConfig {
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient sapClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("336d038a-4d7d-42bf-a5e4-4442c1ce18ef")
-                .clientSecret("_sdb:ewQIRU-rE]mjC3:G-w6YD.Rxt")
+                .clientId("5b54ebb7-210b-45cf-b1e1-afb62ca1da98")
+                .clientSecret("BS4RPTf7ixbfzcsU5RMTnLYZo727Qo?753")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("https://auowyx4ay.trial-accounts.ondemand.com/oauth2/callback")
+                .redirectUri("https://auemfvyvf.trial-accounts.ondemand.com/oauth2/callback")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope(OidcScopes.EMAIL)
