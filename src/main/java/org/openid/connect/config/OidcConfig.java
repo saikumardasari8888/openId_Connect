@@ -31,7 +31,7 @@ public class OidcConfig {
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         RegisteredClient sapClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("5b54ebb7-210b-45cf-b1e1-afb62ca1da98")
+                .clientId("5b54ebb7-210b-45cf-b1e1-afb62ca1da98+1")
                 .clientSecret("BS4RPTf7ixbfzcsU5RMTnLYZo727Qo?753")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
